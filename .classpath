@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="lib" path="C:/Users/ahi/.m2/repository/org/apache/httpcomponents/httpcore/4.4.1/httpcore-4.4.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ahi/.m2/repository/org/codehaus/jackson/jackson-core-asl/1.9.13/jackson-core-asl-1.9.13.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ahi/.m2/repository/org/codehaus/jackson/jackson-mapper-asl/1.9.13/jackson-mapper-asl-1.9.13.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ahi/.m2/repository/org/apache/httpcomponents/httpclient/4.5/httpclient-4.5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ahi/.m2/repository/commons-io/commons-io/2.5/commons-io-2.5.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/inspectit.shared.all"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/inspectit.shared.cs"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/inspectit.agent.java"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/inspectit.agent.java.sdk"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/inspectit.server"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/inspectit.server.diagnosis"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/inspectit.ui.rcp"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
