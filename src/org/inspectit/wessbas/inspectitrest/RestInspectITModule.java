@@ -1,7 +1,9 @@
 package org.inspectit.wessbas.inspectitrest;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.StreamSupport;
 
@@ -10,7 +12,10 @@ import org.inspectit.wessbas.sessionconversion.SessionConverter;
 
 import rocks.inspectit.shared.all.cmr.model.MethodIdent;
 import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.cmr.ApplicationData;
+import rocks.inspectit.shared.all.communication.data.cmr.BusinessTransactionData;
 
 /**
  * Module for importing the Traces stored in the buffer of a CMR repository. Uses the version
@@ -53,11 +58,51 @@ public class RestInspectITModule {
 			throw new RuntimeException(e);
 		}
 
+		Iterable<ApplicationData> applications = null;
+		List<Iterable<BusinessTransactionData>> allBusinessTransactionsOfAllApplications = new ArrayList<Iterable<BusinessTransactionData>>();
+
+		try {
+			applications = fetcher.fetchAllApplications();
+
+			for (ApplicationData application : applications) {
+				allBusinessTransactionsOfAllApplications.add(fetcher.fetchAllBusinessTransactions(application.getId()));
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		Iterable<BusinessTransactionData> justOneMonitoredApplication = allBusinessTransactionsOfAllApplications.get(0);
+
+		HashMap<Integer, String> businessTransactionsMap = new HashMap<Integer, String>();
+
+		for (BusinessTransactionData transaction : justOneMonitoredApplication) {
+			int businessTransactionId = transaction.getId();
+			String businessTransactionName = transaction.getName();
+			businessTransactionsMap.put(businessTransactionId, businessTransactionName);
+		}
+
 		Iterable<InvocationSequenceData> invocationSequences = fetcher.fetchAll(agent.getId());
+
+		HashMap<Long, String> businessTransactions = new HashMap<Long, String>();
+
+		for (InvocationSequenceData invoc : invocationSequences) {
+			if (businessTransactionsMap.get(invoc.getBusinessTransactionId()) != null) {
+				String businessTransactionName = businessTransactionsMap.get(invoc.getBusinessTransactionId());
+
+				if (!businessTransactionName.equals("Unknown Transaction")) {
+					if ((invoc.getTimerData() != null) && (invoc.getTimerData() instanceof HttpTimerData)) {
+						HttpTimerData dat = (HttpTimerData) invoc.getTimerData();
+						businessTransactions.put(dat.getId(), businessTransactionName);
+					}
+				}
+			}
+		}
 
 		SessionConverter converter = new SessionConverter();
 
-		converter.convertIntoSessionLog(methods, agent, invocationSequences);
-	}
+		converter.convertIntoSessionLog(methods, agent, invocationSequences, businessTransactions);
 
+
+	}
 }

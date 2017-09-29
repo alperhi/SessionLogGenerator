@@ -37,11 +37,11 @@ public class SessionConverter {
 	 * @param agent
 	 * @param invocationSequences
 	 */
-	public void convertIntoSessionLog(Map<Long, MethodIdent> methods, PlatformIdent agent, Iterable<InvocationSequenceData> invocationSequences) {
+	public void convertIntoSessionLog(Map<Long, MethodIdent> methods, PlatformIdent agent, Iterable<InvocationSequenceData> invocationSequences, HashMap<Long, String> businessTransactions) {
 
 		HashMap<String, List<HttpTimerData>> sortedList = sortAfterSessionAndTimestamp(invocationSequences);
 
-		writeIntoFile(sortedList, methods);
+		writeIntoFile(sortedList, methods, businessTransactions);
 
 	}
 
@@ -49,7 +49,7 @@ public class SessionConverter {
 	 * @param sortedList
 	 * @param methods
 	 */
-	public void writeIntoFile(HashMap<String, List<HttpTimerData>> sortedList, Map<Long, MethodIdent> methods) {
+	public void writeIntoFile(HashMap<String, List<HttpTimerData>> sortedList, Map<Long, MethodIdent> methods, HashMap<Long, String> businessTransactions) {
 		boolean first = true;
 		try {
 			FileOutputStream fout = FileUtils.openOutputStream(new File(FILEDIRECTORY));
@@ -65,11 +65,17 @@ public class SessionConverter {
 					// get http specific data
 					// append(methods.get(invoc.getMethodIdent()).getMethodName()) wirft in seltenen
 					// Fällen eine NullPointerException (warum?)
-					entry.append(";\"").append(methods.get(invoc.getMethodIdent()).getMethodName()).append("\":").append(invoc.getTimeStamp().getTime() * 1000000).append(":")
-					.append((invoc.getTimeStamp().getTime() * 1000000) + ((long) invoc.getDuration() * 1000000));
+					// entry.append(";\"").append(methods.get(invoc.getMethodIdent()).getMethodName()).append("\":").append(invoc.getTimeStamp().getTime()
+					// * 1000000).append(":")
+					// .append((invoc.getTimeStamp().getTime() * 1000000) + ((long)
+					// invoc.getDuration() * 1000000));
 
-					appendHTTPInfo(entry, invoc);
+					if (businessTransactions.get(invoc.getId()) != null) {
+						entry.append(";\"").append(businessTransactions.get(invoc.getId())).append("\":").append(invoc.getTimeStamp().getTime() * 1000000).append(":")
+						.append((invoc.getTimeStamp().getTime() * 1000000) + ((long) invoc.getDuration() * 1000000));
 
+						appendHTTPInfo(entry, invoc);
+					}
 				}
 				if (first) {
 					first = false;

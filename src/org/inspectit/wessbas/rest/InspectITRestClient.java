@@ -8,12 +8,15 @@ import java.util.Map;
 import rocks.inspectit.shared.all.cmr.model.MethodIdent;
 import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.cmr.ApplicationData;
+import rocks.inspectit.shared.all.communication.data.cmr.BusinessTransactionData;
 
 
 /**
  *
  * Class for managing the REST connection with an inpsectIT CMR.
- * @author Jonas Kunz
+ *
+ * @author Jonas Kunz, Alper Hidiroglu
  *
  */
 public class InspectITRestClient {
@@ -24,6 +27,8 @@ public class InspectITRestClient {
 	private static final String ALL_AGENTS_PATH = "/rest/data/agents";
 
 	private static final String ALL_METHODS_PATH = "/rest/data/agents";
+
+	private static final String ALL_APPLICATIONS_PATH = "/rest/bc/app";
 
 	private static final String CREATE_STORAGE_PATH = "/rest/storage/create";
 	private static final String START_RECORDING_STORAGE_PATH = "/rest/storage/start-recording";
@@ -58,6 +63,28 @@ public class InspectITRestClient {
 				return new RESTInvocationSequencesIterator(rest,filterParams);
 			}
 		};
+	}
+
+	/**
+	 * @return A list of all Agents known to the CMR
+	 * @throws IOException
+	 */
+	public Iterable<ApplicationData> fetchAllApplications() throws IOException {
+
+		ApplicationData[] result = rest.performGet(ALL_APPLICATIONS_PATH, ApplicationData[].class);
+
+		return Arrays.asList(result);
+	}
+
+	/**
+	 * @return A list of all Agents known to the CMR
+	 * @throws IOException
+	 */
+	public Iterable<BusinessTransactionData> fetchAllBusinessTransactions(int appId) throws IOException {
+
+		BusinessTransactionData[] result = rest.performGet(ALL_APPLICATIONS_PATH + "/" + appId + "/btx", BusinessTransactionData[].class);
+
+		return Arrays.asList(result);
 	}
 
 	/**
