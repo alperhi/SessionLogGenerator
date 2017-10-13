@@ -1,16 +1,14 @@
-package org.inspectit.wessbas.inspectitrest;
+package org.inspectit.wessbas.modules;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.StreamSupport;
 
 import org.inspectit.wessbas.rest.InspectITRestClient;
-import org.inspectit.wessbas.sessionconversion.SessionConverter;
+import org.inspectit.wessbas.sessionconversion.InspectITSessionConverter;
 
-import rocks.inspectit.shared.all.cmr.model.MethodIdent;
 import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
@@ -46,14 +44,10 @@ public class RestInspectITModule {
 
 		PlatformIdent agent;
 
-		Map<Long, MethodIdent> methods = new HashMap<>();
 		try {
 			agent = StreamSupport.stream(fetcher.fetchAllAgents().spliterator(), false).filter((a) -> a.getAgentName().equalsIgnoreCase(AGENTNAME))
 					.findFirst().get();
 
-			for (MethodIdent method : fetcher.fetchAllMethods(agent.getId())) {
-				methods.put(method.getId(), method);
-			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -99,9 +93,9 @@ public class RestInspectITModule {
 			}
 		}
 
-		SessionConverter converter = new SessionConverter();
+		InspectITSessionConverter converter = new InspectITSessionConverter();
 
-		converter.convertIntoSessionLog(methods, agent, invocationSequences, businessTransactions);
+		converter.convertInvocationSequencesIntoSessionLog(invocationSequences, businessTransactions);
 
 
 	}

@@ -30,13 +30,7 @@ public class InspectITRestClient {
 
 	private static final String ALL_APPLICATIONS_PATH = "/rest/bc/app";
 
-	private static final String CREATE_STORAGE_PATH = "/rest/storage/create";
-	private static final String START_RECORDING_STORAGE_PATH = "/rest/storage/start-recording";
-	private static final String STOP_RECORDING_STORAGE_PATH = "/rest/storage/stop-recording";
-	private static final String DELETE_STORAGE_PATH = "/rest/storage/delete";
-
 	private JsonHTTPClientWrapper rest;
-
 
 	/**
 	 * @param hostWithPort host:port of the CMR to connect to
@@ -113,53 +107,6 @@ public class InspectITRestClient {
 		MethodIdent[] result = rest.performGet(ALL_METHODS_PATH + "/" + platformId + "/methods", MethodIdent[].class, params);
 
 		return Arrays.asList(result);
-	}
-
-	/**
-	 * Creates a new storage at the CMR.
-	 *
-	 * @param name the name of the storage.
-	 * @return the id of the storage.
-	 * @throws IOException
-	 */
-	public String createStorage(String name) throws IOException {
-		Map<String,String> params = new HashMap<>();
-		params.put("name", name);
-		Map result = rest.performGet(CREATE_STORAGE_PATH, Map.class, params);
-		return (String) ((Map)result.get("storage")).get("id");
-	}
-
-	/**
-	 * Starts the recording of a given storage.
-	 * @param id the id of the storage
-	 * @throws IOException
-	 */
-	public void startRecording(String id) throws IOException {
-		Map<String,String> params = new HashMap<>();
-		params.put("id", id);
-		params.put("autoFinalize", "true");
-		Map result = rest.performGet(START_RECORDING_STORAGE_PATH, Map.class, params);
-	}
-
-
-	/**
-	 * Deletes a storage.
-	 * @param id the id of the storage to delete
-	 * @throws IOException
-	 */
-	public void deleteStorage(String id) throws IOException {
-		Map<String,String> params = new HashMap<>();
-		params.put("id", id);
-		Map result = rest.performGet(DELETE_STORAGE_PATH, Map.class, params);
-	}
-
-	/**
-	 * Stops the recording.
-	 * @throws IOException
-	 */
-	public void stopRecording() throws IOException {
-		Map<String,String> params = new HashMap<>();
-		Map result = rest.performGet(STOP_RECORDING_STORAGE_PATH, Map.class, params);
 	}
 
 	/**

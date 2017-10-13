@@ -14,5 +14,8 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/inspectit.server"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/inspectit.server.diagnosis"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/inspectit.ui.rcp"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/open.xtrace.adapters"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/open.xtrace.api"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/open.xtrace.default.impl"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

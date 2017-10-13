@@ -17,8 +17,6 @@ import java.util.Optional;
 
 import org.apache.commons.io.FileUtils;
 
-import rocks.inspectit.shared.all.cmr.model.MethodIdent;
-import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 
@@ -28,20 +26,19 @@ import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
  * @author Alper Hidiroglu, Jonas Kunz
  *
  */
-public class SessionConverter {
+public class InspectITSessionConverter {
 
-	public final String FILEDIRECTORY = "C:/Users/ahi/Desktop/ContinuITy/generated-sessions/sessions.dat";
+	private final String FILEDIRECTORY = "C:/Users/ahi/Desktop/ContinuITy/generated-sessions/inspectit/sessions.dat";
 
 	/**
 	 * @param methods
-	 * @param agent
 	 * @param invocationSequences
 	 */
-	public void convertIntoSessionLog(Map<Long, MethodIdent> methods, PlatformIdent agent, Iterable<InvocationSequenceData> invocationSequences, HashMap<Long, String> businessTransactions) {
+	public void convertInvocationSequencesIntoSessionLog(Iterable<InvocationSequenceData> invocationSequences, HashMap<Long, String> businessTransactions) {
 
 		HashMap<String, List<HttpTimerData>> sortedList = sortAfterSessionAndTimestamp(invocationSequences);
 
-		writeIntoFile(sortedList, methods, businessTransactions);
+		writeIntoFile(sortedList, businessTransactions);
 
 	}
 
@@ -49,7 +46,7 @@ public class SessionConverter {
 	 * @param sortedList
 	 * @param methods
 	 */
-	public void writeIntoFile(HashMap<String, List<HttpTimerData>> sortedList, Map<Long, MethodIdent> methods, HashMap<Long, String> businessTransactions) {
+	public void writeIntoFile(HashMap<String, List<HttpTimerData>> sortedList, HashMap<Long, String> businessTransactions) {
 		boolean first = true;
 		try {
 			FileOutputStream fout = FileUtils.openOutputStream(new File(FILEDIRECTORY));
